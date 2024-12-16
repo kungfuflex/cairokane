@@ -1,0 +1,29 @@
+[package]
+name = "cairokane-contract"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[features]
+test = []
+testnet = []
+dogecoin = []
+luckycoin = []
+bellscoin = []
+fractal = []
+mainnet = []
+
+
+[dependencies]
+alkanes-support = { git = "https:/github.com/kungfuflex/alkanes-rs" }
+alkanes-runtime = { git = "https://github.com/kungfuflex/alkanes-rs" }
+metashrew-support = { git = "https://github.com/kungfuflex/alkanes-rs" }
+protorune-support = { git = "https://github.com/kungfuflex/alkanes-rs" }
+cairokane-support = { path = "../../crates/cairokane-support" }
+cairo-vm = { git = "https://github.com/kungfuflex/cairo-vm" }
+ordinals = { git = "https://github.com/kungfuflex/alkanes-rs" }
+anyhow = "1.0.94"
+bitcoin = { version = "0.32.4", features = ["rand"] }
+getrandom = { version = "0.2.15", features = ["js"] }
