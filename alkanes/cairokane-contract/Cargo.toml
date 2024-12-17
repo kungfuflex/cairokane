@@ -7,6 +7,7 @@ edition = "2021"
 crate-type = ["cdylib", "rlib"]
 
 [features]
+default = []
 test = []
 testnet = []
 dogecoin = []
@@ -22,7 +23,8 @@ alkanes-runtime = { git = "https://github.com/kungfuflex/alkanes-rs" }
 metashrew-support = { git = "https://github.com/kungfuflex/alkanes-rs" }
 protorune-support = { git = "https://github.com/kungfuflex/alkanes-rs" }
 cairokane-support = { path = "../../crates/cairokane-support" }
-cairo-vm = { git = "https://github.com/kungfuflex/cairo-vm" }
+cairo-vm = { git = "https://github.com/kungfuflex/cairo-vm", default-features = false }
+wasm-bindgen = "0.2.99"
 ordinals = { git = "https://github.com/kungfuflex/alkanes-rs" }
 anyhow = "1.0.94"
 bitcoin = { version = "0.32.4", features = ["rand"] }

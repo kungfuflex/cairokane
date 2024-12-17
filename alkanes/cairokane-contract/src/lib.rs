@@ -8,13 +8,12 @@ use anyhow::{anyhow, Result};
 use alkanes_runtime::{runtime::AlkaneResponder, storage::StoragePointer};
 use alkanes_support::{witness::find_witness_payload, utils::{shift_or_err}};
 use alkanes_support::{context::Context, parcel::{AlkaneTransfer, AlkaneTransferParcel}, response::CallResponse};
-use metashrew_support::{utils::{consensus_encode, consensus_decode}, compat::{to_arraybuffer_layout, to_passback_ptr}};
+use metashrew_support::{utils::{consensus_decode}, compat::{to_arraybuffer_layout, to_passback_ptr}};
 use metashrew_support::index_pointer::KeyValuePointer;
 use protorune_support::{protostone::{Protostone}};
 use ordinals::{Runestone, Artifact};
-use bitcoin::{Witness, Transaction};
+use bitcoin::{Transaction};
 use std::sync::Arc;
-use sphincsplus;
 
 #[derive(Default)]
 pub struct Cairokane(());
@@ -42,6 +41,7 @@ impl Cairokane {
   fn public_pointer(&self) -> StoragePointer {
     StoragePointer::from_keyword("/public")
   }
+  #[allow(dead_code)]
   fn public(&self) -> Vec<u8> {
     self.public_pointer().get().as_ref().clone()
   }
@@ -79,16 +79,16 @@ impl Cairokane {
   fn parcel(&self) -> Result<AlkaneTransferParcel> {
     AlkaneTransferParcel::parse(&mut std::io::Cursor::new(self.parcel_pointer().get().as_ref().clone()))
   }
-  fn cairo_run(&self) -> Result<()> {
+  fn cairo_run(&self, _proof: Vec<u8>) -> Result<()> {
     Ok(())
   }
   fn verify_proof(&self) -> Result<()> {
-    let mut tx = consensus_decode::<Transaction>(&mut std::io::Cursor::new(self.transaction()))?;
+    let tx = consensus_decode::<Transaction>(&mut std::io::Cursor::new(self.transaction()))?;
     let proof = find_witness_payload(&tx, 0)
                     .ok_or("")
                     .map_err(|_| anyhow!("witness envelope at index 0 does not contain data"))?;
      
-    let pk = self.public();
+   // let pk = self.public();
     self.cairo_run(proof)?;
     Ok(())
   }
@@ -113,7 +113,7 @@ impl AlkaneResponder for Cairokane {
                 }
             },
             78 => {
-                self.verify_signature()?;
+                self.verify_proof()?;
                 response.alkanes = self.parcel()?;
                 Ok(response)
             }
